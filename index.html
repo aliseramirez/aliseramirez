@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alise Ramirez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1c14;
+    --muted: #5a5e4a;
+    --faint: #9da49a;
+    --rule: #dddbd3;
+    --bg: #f5f3ee;
+    --surface: #eeebe3;
+    --accent: #5a6b2a;
+    --accent-light: #eaedd8;
+    --accent-dark: #3d4a1c;
+    --green: #4a5e35;
+    --green-light: #e8edd8;
+    --violet: #5b5030;
+    --violet-light: #f0ead8;
+    --slate: #4a5a42;
+    --slate-light: #e4edd8;
+    --serif: 'Inter', system-ui, sans-serif;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 200;
+    background: var(--bg);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-name {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  /* hamburger button */
+  .burger {
+    width: 36px; height: 36px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+    border-radius: 4px;
+    transition: background 0.15s;
+  }
+
+  .burger:hover { background: var(--surface); }
+
+  .burger span {
+    display: block;
+    width: 20px; height: 1.5px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease, width 0.25s ease;
+    transform-origin: center;
+  }
+
+  /* open state */
+  .burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .burger.open span:nth-child(2) { opacity: 0; width: 0; }
+  .burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* drawer */
+  .drawer {
+    position: fixed;
+    top: 54px; right: 0; bottom: 0;
+    width: 260px;
+    background: var(--bg);
+    border-left: 1px solid var(--rule);
+    z-index: 190;
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 2rem;
+    gap: 0;
+  }
+
+  .drawer.open { transform: translateX(0); }
+
+  .drawer a {
+    font-size: 1.1rem;
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--rule);
+    transition: color 0.2s;
+    letter-spacing: -0.01em;
+  }
+
+  .drawer a:last-child { border-bottom: none; }
+  .drawer a:hover { color: var(--ink); }
+
+  /* overlay */
+  .overlay {
+    position: fixed;
+    inset: 54px 0 0 0;
+    background: rgba(26,28,30,0.25);
+    z-index: 180;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    backdrop-filter: blur(2px);
+  }
+
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+  /* ── LAYOUT ── */
+  main { padding-top: 54px; }
+
+  section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 5.5rem 2rem;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  section.visible { opacity: 1; transform: translateY(0); }
+  section + section { border-top: 1px solid var(--rule); }
+
+  .section-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 2.25rem;
+    display: block;
+  }
+
+  h2 {
+    font-family: var(--sans);
+    font-size: 1.9rem;
+    font-weight: 600;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--ink);
+    letter-spacing: -0.03em;
+  }
+
+  /* ── HERO ── */
+  #hero {
+    padding-top: 7.5rem;
+    padding-bottom: 5.5rem;
+    animation: fadeUp 0.7s ease forwards;
+    opacity: 1; transform: none;
+  }
+
+  .eyebrow {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+
+  h1 {
+    font-family: var(--sans);
+    font-size: clamp(2.8rem, 6.5vw, 4.5rem);
+    font-weight: 600;
+    line-height: 1.0;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    margin-bottom: 1.75rem;
+  }
+
+  h1 .dim {
+    color: var(--faint);
+    font-weight: 300;
+  }
+
+  .hero-tags {
+    display: flex;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.85rem;
+  }
+
+  .hero-tag {
+    font-size: 0.72rem;
+    font-weight: 400;
+    padding: 0.28rem 0.8rem;
+    border-radius: 20px;
+    letter-spacing: 0.02em;
+  }
+
+  .tag-blue   { background: var(--accent-light);   color: #3d4a1c; }
+  .tag-green  { background: var(--green-light);  color: #3d4a1c; }
+  .tag-violet { background: var(--accent-light); color: #3d4a1c; }
+  .tag-slate  { background: var(--green-light);  color: #3d4a1c; }
+
+  .hero-body {
+    font-size: 1.05rem;
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.85;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+
+  .hero-links { display: flex; gap: 1.25rem; align-items: center; flex-wrap: wrap; }
+
+  .btn-primary {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 3px;
+    padding: 0.72rem 1.6rem;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:hover { background: var(--green); }
+
+  .btn-ghost {
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+
+  .btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
+
+  /* ── TIMELINE ── */
+  .timeline-wrap { position: relative; padding: 1.5rem 0 0.5rem; }
+
+  .timeline-track {
+    position: absolute;
+    top: 3.1rem; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, var(--accent-light), var(--accent), var(--accent-light));
+  }
+
+  .timeline-nodes {
+    display: flex;
+    justify-content: space-around;
+    position: relative;
+  }
+
+  .tnode {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    flex: 1;
+    max-width: 160px;
+  }
+
+  .tnode-logo {
+    width: 50px; height: 50px;
+    border-radius: 12px;
+    border: 1px solid var(--rule);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    overflow: hidden;
+  }
+
+  .tnode:hover .tnode-logo {
+    border-color: var(--ink);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26,28,30,0.08);
+  }
+
+  .tnode-name { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; color: var(--ink); text-align: center; letter-spacing: -0.01em; }
+  .tnode-year { font-size: 0.6rem; color: var(--faint); text-align: center; letter-spacing: 0.04em; }
+  .tnode-role { font-size: 0.65rem; color: var(--muted); text-align: center; line-height: 1.4; max-width: 90px; }
+
+  /* ── ADVISORY ── */
+  .advisory-statement {
+    font-size: 1.05rem;
+    font-weight: 300;
+    line-height: 1.85;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    padding: 1.5rem 1.75rem;
+    background: var(--surface);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .expertise-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+
+  .expertise-item {
+    background: var(--bg);
+    padding: 1.25rem 1.5rem;
+    transition: background 0.2s;
+  }
+
+  .expertise-item:hover { background: var(--surface); }
+
+  .expertise-dot { width: 7px; height: 7px; border-radius: 50%; margin-bottom: 0.65rem; }
+  .expertise-title { font-size: 0.85rem; font-weight: 500; color: var(--ink); margin-bottom: 0.3rem; }
+  .expertise-desc  { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+  .engage-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+
+  .engage-box {
+    padding: 1.25rem;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+  }
+
+  .engage-title { font-size: 0.85rem; font-weight: 500; color: var(--ink); margin-bottom: 0.4rem; }
+  .engage-desc  { font-size: 0.76rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── INVESTING ── */
+  .invest-intro { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.85; font-weight: 300; }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .portfolio-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--bg);
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  .portfolio-item:hover { border-color: var(--green); background: var(--surface); }
+
+  .portfolio-logo {
+    width: 42px; height: 42px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; overflow: hidden;
+  }
+
+  .portfolio-name { font-size: 0.85rem; font-weight: 500; color: var(--ink); margin-bottom: 0.18rem; }
+  .portfolio-desc { font-size: 0.76rem; color: var(--muted); line-height: 1.4; }
+
+  .lp-note {
+    font-size: 0.8rem;
+    color: var(--muted);
+    padding: 0.8rem 1.1rem;
+    background: var(--accent-light);
+    border-radius: 6px;
+    border-left: 2px solid var(--accent);
+  }
+
+  /* ── BUILDING ── */
+  .building-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; }
+
+  .building-card {
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 1.5rem;
+    background: var(--bg);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .building-card:hover {
+    border-color: var(--ink);
+    box-shadow: 0 4px 16px rgba(26,28,30,0.06);
+  }
+
+  .building-logo {
+    width: 40px; height: 40px;
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 1rem; overflow: hidden;
+  }
+
+  .building-name { font-family: var(--sans); font-size: 1rem; font-weight: 600; color: var(--ink); margin-bottom: 0.4rem; letter-spacing: -0.02em; }
+  .building-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; margin-bottom: 0.85rem; font-weight: 300; }
+
+  .building-tag {
+    font-size: 0.62rem; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.22rem 0.6rem; border-radius: 20px;
+  }
+
+  .tag-live { background: var(--green-light); color: #3d4a1c; }
+  .tag-dev  { background: var(--green-light); color: #3d4a1c; }
+
+  /* ── WRITING ── */
+  .writing-intro { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.85; font-weight: 300; }
+
+  .writing-item {
+    display: flex; gap: 1.5rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+  }
+
+  .writing-item:first-of-type { border-top: 1px solid var(--rule); }
+  .writing-tag-label { font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); white-space: nowrap; padding-top: 0.22rem; min-width: 72px; }
+  .writing-title { font-family: var(--sans); font-size: 0.95rem; font-weight: 500; color: var(--ink); margin-bottom: 0.2rem; letter-spacing: -0.01em; }
+  .writing-desc  { font-size: 0.8rem; color: var(--muted); font-weight: 300; }
+
+  /* ── CONTACT ── */
+  .contact-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin-top: 2rem;
+  }
+
+  .contact-card {
+    padding: 1.25rem;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    background: var(--surface);
+    text-align: center;
+    text-decoration: none;
+    transition: border-color 0.2s;
+    display: block;
+  }
+
+  .contact-card:hover { border-color: var(--ink); }
+  .contact-icon  { font-size: 1rem; margin-bottom: 0.5rem; display: block; color: var(--faint); }
+  .contact-label { font-size: 0.62rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--faint); margin-bottom: 0.3rem; display: block; }
+  .contact-value { font-size: 0.78rem; color: var(--ink); word-break: break-all; font-weight: 400; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--rule);
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+  }
+
+  footer.visible { opacity: 1; transform: translateY(0); }
+  .footer-name { font-family: var(--sans); font-size: 0.85rem; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+  .footer-copy { font-size: 0.7rem; color: var(--faint); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#hero" class="nav-name">Alise Ramirez</a>
+  <button class="burger" id="burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="drawer" id="drawer">
+  <a href="#work"      onclick="closeMenu()">Work</a>
+  <a href="#advisory"  onclick="closeMenu()">Advisory</a>
+  <a href="#investing" onclick="closeMenu()">Investing</a>
+  <a href="#building"  onclick="closeMenu()">Building</a>
+  <a href="#writing"   onclick="closeMenu()">Writing</a>
+  <a href="#contact"   onclick="closeMenu()">Contact</a>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <span class="eyebrow">Alise Otilia Ramirez · NYC</span>
+    <h1>Leader.<br>Builder.<br><span class="dim">Investor.</span></h1>
+    <div class="hero-tags">
+      <span class="hero-tag" style="background:var(--accent-light);color:var(--accent-dark);">Product &amp; AI</span>
+      <span class="hero-tag" style="background:var(--accent-light);color:var(--accent-dark);">Climate</span>
+      <span class="hero-tag" style="background:var(--accent-light);color:var(--accent-dark);">Angel Investor</span>
+      <span class="hero-tag" style="background:var(--accent-light);color:var(--accent-dark);">Community</span>
+    </div>
+    <p class="hero-body">I build products, companies, and community at the intersection of data, AI, and capital — and write about what it actually looks like to do that as a first-gen Afro-Latina navigating tech, finance, and financial freedom.</p>
+    <div class="hero-links">
+      <a href="#advisory" class="btn-primary">Work with me</a>
+      <a href="#writing"  class="btn-ghost">Read La Verdad →</a>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section id="work">
+    <span class="section-label">Experience</span>
+    <div class="timeline-wrap">
+      <div class="timeline-track"></div>
+      <div class="timeline-nodes">
+
+        <div class="tnode">
+          <div class="tnode-logo" style="background:#000;">
+            <!--
+              ════════════════════════════════════
+              REPLACE: Netflix logo SVG
+              Paste your <svg>…</svg> here,
+              replacing this <span> placeholder.
+              ════════════════════════════════════
+            -->
+            <span style="font-family:var(--sans);font-size:0.58rem;font-weight:400;color:#e50914;letter-spacing:0.06em;">NFLX</span>
+          </div>
+          <p class="tnode-name">Netflix</p>
+          <p class="tnode-year">2019 – 2024</p>
+          <p class="tnode-role">Sr. Analytics Engineer</p>
+        </div>
+
+        <div class="tnode">
+          <div class="tnode-logo" style="background:#faf8f5;">
+            <!--
+              ════════════════════════════════════
+              REPLACE: eloraHQ logo SVG
+              ════════════════════════════════════
+            -->
+            <span style="font-family:var(--sans);font-size:0.55rem;font-weight:400;color:#9b8e82;letter-spacing:0.06em;">ELORA</span>
+          </div>
+          <p class="tnode-name">eloraHQ</p>
+          <p class="tnode-year">2024 – 2025</p>
+          <p class="tnode-role">PM</p>
+        </div>
+
+        <div class="tnode">
+          <div class="tnode-logo" style="background:#fff;">
+            <!--
+              ════════════════════════════════════
+              REPLACE: Capital One logo SVG
+              ════════════════════════════════════
+            -->
+            <span style="font-family:var(--sans);font-size:0.58rem;font-weight:400;color:#d03027;letter-spacing:0.06em;">C1</span>
+          </div>
+          <p class="tnode-name">Capital One</p>
+          <p class="tnode-year">2026 – Present</p>
+          <p class="tnode-role">PM, Payments</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ADVISORY -->
+  <section id="advisory">
+    <span class="section-label">Advisory</span>
+    <p class="advisory-statement">Most startups hit the same wall: data is everywhere but not usable, AI is bolted on but not working, and the team can't tell if they're building the right thing. I've been the person who untangles that — and I advise early-stage founders who need someone who can read both the data stack and the product brief.</p>
+
+    <div class="expertise-grid">
+      <div class="expertise-item">
+        <div class="expertise-dot" style="background:#5a6b2a;"></div>
+        <p class="expertise-title">Data product strategy</p>
+        <p class="expertise-desc">Shipping data as a product — observability, discoverability, trust signals, self-serve infrastructure</p>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-dot" style="background:#7a8c4a;"></div>
+        <p class="expertise-title">AI-native product development</p>
+        <p class="expertise-desc">Building products where AI is core UX — prompt strategy, evaluation frameworks, failure modes</p>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-dot" style="background:#4a5e35;"></div>
+        <p class="expertise-title">Analytics engineering foundations</p>
+        <p class="expertise-desc">Bridging data engineering and product — contracts, pipeline observability, infrastructure decisions</p>
+      </div>
+      <div class="expertise-item">
+        <div class="expertise-dot" style="background:#3d4a1c;"></div>
+        <p class="expertise-title">0→1 product discovery</p>
+        <p class="expertise-desc">User research, problem framing, and prioritization for early or pivot-stage teams</p>
+      </div>
+    </div>
+
+    <div class="engage-row">
+      <div class="engage-box">
+        <p class="engage-title">Office hours</p>
+        <p class="engage-desc">60-min sessions on a specific problem — strategy, scoping, or roadmap pressure-testing</p>
+      </div>
+      <div class="engage-box">
+        <p class="engage-title">Sprint advisory</p>
+        <p class="engage-desc">4–6 week focused engagement — embedded reviews, async feedback, weekly syncs</p>
+      </div>
+      <div class="engage-box">
+        <p class="engage-title">Formal advisory</p>
+        <p class="engage-desc">Ongoing with equity or retainer — ideal for early-stage companies with recurring need</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- INVESTING -->
+  <section id="investing">
+    <span class="section-label">Investing</span>
+    <p class="invest-intro">Angel investor focused on climate hardware and infrastructure. I write checks through CladoVC and co-invest alongside operators who understand that the energy transition is a deployment problem as much as a technology problem.</p>
+
+    <div class="portfolio-grid">
+
+      <div class="portfolio-item">
+        <div class="portfolio-logo" style="background:#0a1628;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Form Energy logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.52rem;font-weight:400;color:#4db8a0;letter-spacing:0.05em;font-family:var(--sans);">FE</span>
+        </div>
+        <div>
+          <p class="portfolio-name">Form Energy</p>
+          <p class="portfolio-desc">Long-duration iron-air grid storage</p>
+        </div>
+      </div>
+
+      <div class="portfolio-item">
+        <div class="portfolio-logo" style="background:#fff8ee;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Exowatt logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.52rem;font-weight:400;color:#e8820c;letter-spacing:0.05em;font-family:var(--sans);">EXO</span>
+        </div>
+        <div>
+          <p class="portfolio-name">Exowatt</p>
+          <p class="portfolio-desc">Solar thermal energy storage for data centers</p>
+        </div>
+      </div>
+
+      <div class="portfolio-item">
+        <div class="portfolio-logo" style="background:#f0f7f0;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Ammobia logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.52rem;font-weight:400;color:#2d7a2d;letter-spacing:0.05em;font-family:var(--sans);">AMB</span>
+        </div>
+        <div>
+          <p class="portfolio-name">Ammobia</p>
+          <p class="portfolio-desc">Green ammonia for hard-to-decarbonize sectors</p>
+        </div>
+      </div>
+
+      <div class="portfolio-item">
+        <div class="portfolio-logo" style="background:#f0eeff;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Slang.ai logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.52rem;font-weight:400;color:#5b3db5;letter-spacing:0.05em;font-family:var(--sans);">SLG</span>
+        </div>
+        <div>
+          <p class="portfolio-name">Slang.ai</p>
+          <p class="portfolio-desc">Conversational AI for the restaurant industry</p>
+        </div>
+      </div>
+
+    </div>
+    <p class="lp-note">LP at Ganas Ventures — backing Latinx founders at the earliest stages.</p>
+  </section>
+
+  <!-- BUILDING -->
+  <section id="building">
+    <span class="section-label">Building</span>
+    <div class="building-grid">
+
+      <div class="building-card">
+        <div class="building-logo" style="background:#1a1c1e;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Lucero logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.55rem;font-weight:400;color:#9da4ad;letter-spacing:0.08em;font-family:var(--sans);">LUC</span>
+        </div>
+        <p class="building-name">Lucero</p>
+        <p class="building-desc">AI-powered angel portfolio tracker. One view across direct deals, LP positions, and exits — built for early-stage angels.</p>
+        <span class="building-tag tag-live">Live product</span>
+      </div>
+
+      <div class="building-card">
+        <div class="building-logo" style="background:#0d2137;">
+          <!--
+            ════════════════════════════════════
+            REPLACE: Clado logo SVG
+            ════════════════════════════════════
+          -->
+          <span style="font-size:0.55rem;font-weight:400;color:#4db8a0;letter-spacing:0.08em;font-family:var(--sans);">CLD</span>
+        </div>
+        <p class="building-name">Clado</p>
+        <p class="building-desc">Climate data and capital platform connecting underresourced municipalities with impact investors, green banks, and CDFIs.</p>
+        <span class="building-tag tag-dev">In development</span>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- WRITING -->
+  <section id="writing">
+    <span class="section-label">Writing</span>
+    <p class="writing-intro">La Verdad is a newsletter about authentic professional living — identity, self-exploration, and financial freedom. For first-gen professionals navigating systems that weren't built with them in mind.</p>
+    <div class="writing-item">
+      <span class="writing-tag-label">Newsletter</span>
+      <div>
+        <p class="writing-title">La Verdad</p>
+        <p class="writing-desc">Regular dispatches on money, career, identity, and what financial freedom actually looks like in practice</p>
+      </div>
+    </div>
+    <div style="margin-top: 2rem;">
+      <a href="https://substack.com" class="btn-ghost" target="_blank">Read on Substack →</a>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <span class="section-label">Contact</span>
+    <h2>Let's talk.</h2>
+    <p style="color:var(--muted);font-size:1rem;line-height:1.85;max-width:480px;font-weight:300;">Whether you're building something with a data or AI problem at its core, interested in co-investing in climate, or just want to connect.</p>
+    <div class="contact-strip">
+      <a href="mailto:info@cladohq.com" class="contact-card">
+        <span class="contact-icon">✉</span>
+        <span class="contact-label">Email</span>
+        <span class="contact-value">info@cladohq.com</span>
+      </a>
+      <a href="https://linkedin.com/in/aliseotiliaramirez" target="_blank" class="contact-card">
+        <span class="contact-icon">in</span>
+        <span class="contact-label">LinkedIn</span>
+        <span class="contact-value">aliseotiliaramirez</span>
+      </a>
+      <a href="https://substack.com" target="_blank" class="contact-card">
+        <span class="contact-icon">✍</span>
+        <span class="contact-label">Newsletter</span>
+        <span class="contact-value">La Verdad</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer id="footer-el">
+  <span class="footer-name">Alise Ramirez</span>
+  <span class="footer-copy">© 2026</span>
+</footer>
+
+<script>
+  const burger  = document.getElementById('burger');
+  const drawer  = document.getElementById('drawer');
+  const overlay = document.getElementById('overlay');
+
+  function openMenu()  { burger.classList.add('open'); drawer.classList.add('open'); overlay.classList.add('open'); }
+  function closeMenu() { burger.classList.remove('open'); drawer.classList.remove('open'); overlay.classList.remove('open'); }
+  function toggleMenu() { drawer.classList.contains('open') ? closeMenu() : openMenu(); }
+
+  burger.addEventListener('click', toggleMenu);
+  overlay.addEventListener('click', closeMenu);
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.07 });
+  document.querySelectorAll('section:not(#hero), footer').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
