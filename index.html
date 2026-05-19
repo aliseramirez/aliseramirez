@@ -47,7 +47,7 @@
     z-index: 200;
     background: var(--bg);
     border-bottom: 1px solid var(--rule);
-    padding: 0 2rem;
+    padding: 0 8vw;
     height: 54px;
     display: flex;
     align-items: center;
@@ -146,9 +146,9 @@
   main { padding-top: 54px; }
 
   section {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 5.5rem 2rem;
+    max-width: 100%;
+    margin: 0;
+    padding: 5rem 8vw;
     opacity: 0;
     transform: translateY(14px);
     transition: opacity 0.55s ease, transform 0.55s ease;
@@ -233,7 +233,7 @@
   .hero-body {
     font-size: 1.05rem;
     color: var(--muted);
-    max-width: 500px;
+    max-width: 620px;
     line-height: 1.85;
     margin-bottom: 2.5rem;
     font-weight: 300;
@@ -272,7 +272,70 @@
 
   .btn-ghost:hover { color: var(--ink); border-color: var(--muted); }
 
-  /* ── TIMELINE ── */
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .about-photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .about-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about-photo-placeholder {
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    text-align: center;
+    padding: 1rem;
+    line-height: 1.6;
+  }
+
+  .about-text h3 {
+    font-family: var(--sans);
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+
+  .about-text p {
+    font-size: 0.95rem;
+    color: var(--muted);
+    line-height: 1.9;
+    font-weight: 300;
+    margin-bottom: 1.1rem;
+  }
+
+  .about-text p:last-child { margin-bottom: 0; }
+
+  .about-text strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
   .timeline-wrap { position: relative; padding: 1.5rem 0 0.5rem; }
 
   .timeline-track {
@@ -488,9 +551,9 @@
   /* ── FOOTER ── */
   footer {
     border-top: 1px solid var(--rule);
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem;
+    max-width: 100%;
+    margin: 0;
+    padding: 2.5rem 8vw;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -521,6 +584,7 @@
 <div class="overlay" id="overlay"></div>
 
 <div class="drawer" id="drawer">
+  <a href="#about"     onclick="closeMenu()">About</a>
   <a href="#work"      onclick="closeMenu()">Work</a>
   <a href="#advisory"  onclick="closeMenu()">Advisory</a>
   <a href="#investing" onclick="closeMenu()">Investing</a>
@@ -545,6 +609,42 @@
     <div class="hero-links">
       <a href="#advisory" class="btn-primary">Work with me</a>
       <a href="#writing"  class="btn-ghost">Read La Verdad →</a>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <span class="section-label">About</span>
+    <div class="about-grid">
+
+      <div class="about-photo">
+        <!--
+          ════════════════════════════════════
+          REPLACE: Your photo
+          Swap this placeholder by either:
+          1. Replacing with an <img> tag:
+             <img src="your-photo.png" alt="Alise Ramirez">
+          2. Or set a background image on
+             the .about-photo div directly
+          ════════════════════════════════════
+        -->
+        <div class="about-photo-placeholder">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom:8px;">
+            <circle cx="20" cy="15" r="7" stroke="#c8c4ba" stroke-width="1.5" fill="none"/>
+            <path d="M6 36c0-7.7 6.3-14 14-14s14 6.3 14 14" stroke="#c8c4ba" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </svg>
+          Add your photo here
+        </div>
+      </div>
+
+      <div class="about-text">
+        <h3>I've spent my career at the intersection of data, product, and capital — usually before it was obvious that's where things were headed.</h3>
+        <p>At <strong>Netflix</strong>, I spent five years building data as a product — not dashboards or reports, but infrastructure that engineering orgs could actually trust and act on. I worked on observability systems that gave teams real signal at scale, and contributed to $2M in cloud cost savings by treating data quality as a product problem, not an analytics one.</p>
+        <p>Before that and since, I've operated at the <strong>0→1 stage</strong> — doing user research, scoping problems, shipping without a full team, and making product decisions with incomplete information. That tension between what founders need to know and what the data can actually tell them is something I understand from both sides.</p>
+        <p>I'm also an <strong>active angel investor</strong> in climate hardware and infrastructure through CladoVC, and an LP at Ganas Ventures. Sitting on the capital side has sharpened how I think about what makes a company fundable, what makes a product defensible, and where data and AI create durable advantage — versus where they're just overhead.</p>
+        <p>I advise founders who are building something technically complex and trying to figure out what to actually ship next.</p>
+      </div>
+
     </div>
   </section>
 
